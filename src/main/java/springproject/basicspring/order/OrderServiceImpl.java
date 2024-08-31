@@ -1,0 +1,21 @@
+package springproject.basicspring.order;
+
+import springproject.basicspring.discount.DiscountPolicy;
+import springproject.basicspring.discount.FixDiscountPolicy;
+import springproject.basicspring.member.Member;
+import springproject.basicspring.member.MemberRepository;
+import springproject.basicspring.member.MemoryMemberRepository;
+
+public class OrderServiceImpl implements OrderService {
+
+    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+
+    @Override
+    public Order createOrder(Long memberId, String itemName, int itemPrice) {
+        Member member = memberRepository.findById(memberId);
+        int discountPrice = discountPolicy.discount(member,itemPrice);
+
+        return new Order(memberId,itemName,itemPrice,discountPrice);
+    }
+}
